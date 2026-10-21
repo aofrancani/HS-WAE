@@ -1,0 +1,7 @@
+name: hs-wae
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+# After activation, install your PyTorch build and requirements.txt (README.md).

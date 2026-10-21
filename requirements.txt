@@ -1,0 +1,24 @@
+# Install the CPU or CUDA build of PyTorch first; see README.md.
+torch==2.10.0
+lightning==2.6.1
+pytorch-lightning==2.6.1
+torchmetrics==1.8.2
+numpy==2.2.6
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+PyWavelets==1.8.0
+PyYAML==6.0.3
+tqdm==4.67.3
+rich==14.3.3
+xgboost==3.2.0
+
+# Visualization and TensorBoard event writing/reading.
+matplotlib==3.10.8
+seaborn==0.13.2
+pillow==12.1.1
+tensorboard==2.20.0
+tensorboardX==2.6.4
+
+# HyperBlood raw data preprocessing.
+spectral==0.24

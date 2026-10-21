@@ -1,0 +1,122 @@
+seed: 2
+
+data:
+  csv_path: "../data/HS-Class/"
+  crops: ["soy"]
+  batch_size: 64
+  num_workers: 4
+  train_pct: 0.65
+  val_pct: 0.05
+  test_pct: 0.3
+  standardize: true
+  use_weighted_sampler: true
+  pin_memory: false
+  preprocess:
+    input_range: [350, 2460]
+    label_col: "Label"
+    dwt:
+      enabled: true
+      wavelet: "db4"              # good general-purpose wavelet
+      level: null                 # null to let PyWavelets pick max level for your length
+      mode: "coeffs"              # flattened approx+details
+      boundary: "periodization"   # stable lengths
+      include_approx: true        # keep cA_L (overall continuum)
+      log_energy: false           # ignored for "coeffs"
+
+model:
+  name: "sae" # "sae" or "mlp"
+  cfg:
+    hidden_dims: [256, 128]
+    latent_dim: 64
+    activation: "gelu"
+    dropout: 0.0
+    norm: "layer"
+    final_activation: null
+  head:
+    num_classes: 2
+    head_hidden: [64, 32]
+    head_dropout: 0.0
+    ce_weight: 0.2         # weight for ce loss
+    recon_weight: 0.9      # weight for recon loss
+    recon_kind: "mse"
+  wavelet_attn:
+    enabled: true
+    embed_dim: 64            # token embedding dim E
+    num_heads: 4
+    num_layers: 1
+    attn_dropout: 0.0
+    ff_dropout: 0.0
+    use_level_embedding: true
+    importance_softmax: true
+
+optimizer:
+  lr: 0.001
+  weight_decay: 0.01
+
+scheduler:
+  name: "reduce_on_plateau"
+  kwargs:
+    mode: "min"
+    factor: 0.5
+    patience: 8
+    min_lr: 0.000001
+  monitor: "val/loss"
+
+trainer:
+  max_epochs: 300
+  accelerator: "gpu"
+  devices: "auto"
+  precision: "32-true"
+  grad_clip: 1.0
+  log_every_n_steps: 10
+  test_after_fit: true
+
+logging:
+  save_dir: "logs/stats/"
+  monitor: "val/loss"
+  mode: "min"
+  patience: 50
+  min_delta: 0.0001
+  save_top_k: 1
+  filename: "sae-{epoch:02d}"
+  lr_log_interval: "step"
+
+
+#[SCHEDULER KWARGS]
+#   onecycle | cosine | cosine_warm_restarts | reduce_on_plateau | step | multistep | warmup_cosine 
+
+# --- OneCycleLR ---
+# pct_start: 0.1           # % of training for warmup (fraction, e.g. 0.1 = 10%)
+# anneal_strategy: "cos"   # "cos" | "linear"
+# div_factor: 25.0         # initial_lr = max_lr/div_factor
+# final_div_factor: 1e4    # min_lr = max_lr/final_div_factor
+
+# --- CosineAnnealingLR ---
+# eta_min: 0.0            # min learning rate
+
+# --- CosineAnnealingWarmRestarts ---
+# T_0: 10                 # first restart epoch
+# T_mult: 2               # factor by which T_i grows after a restart
+# eta_min: 0.0            # min LR
+
+# --- ReduceLROnPlateau ---
+# mode: "max"             # "min" or "max"
+# factor: 0.5             # LR reduction factor
+# patience: 10            # epochs with no improvement before reducing LR
+# threshold: 1e-4         # minimum change to qualify as improvement
+# cooldown: 0             # epochs to wait after LR reduction
+# min_lr: 0.0             # floor on LR
+# verbose: false
+
+# --- StepLR ---
+# step_size: 30           # period of LR decay
+# gamma: 0.1              # decay factor
+
+# --- MultiStepLR ---
+# milestones: [60, 120]   # epochs at which LR decays
+# gamma: 0.1              # decay factor
+
+# --- Warmup + Cosine (SequentialLR) ---
+# warmup_epochs: 5        # number of warmup epochs
+# start_factor: 0.1       # LR scale at start of warmup
+# eta_min: 0.0            # final min LR
