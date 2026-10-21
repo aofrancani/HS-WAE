@@ -5,8 +5,6 @@
 
 Official repository of "[HS-WAE: A Pipeline for Early Insect Damage Detection in Hyperspectral Soybean Data by Enhanced Deep Autoencoder][ieee-paper]", accepted in **IEEE Transactions on Artificial Intelligence**. IEEE Xplore link coming soon.
 
-**Authors:** André Oliveira Françani, Liang Zhao, João de Deus Ferreira e Silva, Kaizhou Gao, and Lúcio André de Castro Jorge.
-
 ## Abstract
 
 *Early detection of pest-induced stress in soybean plants is challenging since spectral differences are subtle during the initial stages of infestation. This work proposes HS-WAE, a spectral deep learning pipeline combining spectral band grouping, discrete wavelet transform (DWT), a wavelet token attention module (WTAM), and an autoencoder-based classifier. DWT provides a multiscale spectral representation, while WTAM adaptively weights the resulting wavelet levels for each sample before latent-space compression and classification. The method was evaluated on a soybean dataset acquired over seven consecutive days after infestation, considering multiple spectral regions and repeated runs with statistical analysis. The results show that DWT is a key component, significantly outperforming the raw spectral input and enabling earlier discrimination between control and damaged plants. In the near-infrared (NIR) region, HS-WAE achieved 97.2% accuracy, 97.9% F1-score, and 100.0% AUROC on day 02, and perfect metrics on day 03, whereas the raw spectral input achieved its best NIR performance only later. The WTAM further refines the DWT representation through sample-specific wavelet-level weighting, with repeated-run latent-space and counterfactual analyses confirming its functional relevance, particularly in the more challenging multiclass setting. Experiments on the public HyperBlood dataset also show that the proposed pipeline generalizes to a different hyperspectral domain and multiclass setting. Overall, DWT-based spectral representations provide substantial advantages over raw spectra in informative spectral regions, and HS-WAE is effective for early pest-damage detection in soybean plants.*
@@ -118,18 +116,25 @@ Open **[http://localhost:6006](http://localhost:6006)**. Runs are stored under e
 
 ## 5. Evaluation
 
+Evaluate a selected checkpoint on the test split. From the repository root, this example uses soybean **Day 2** and the **NIR** spectral region:
+
 ```bash
-python -m unittest discover -s tests -v
-python -m tests.run_smoke --outdir tests/_artifacts/check01
+cd HS-AE
+
+python -m main --mode test \
+  --config configs/dwt_attn.yaml \
+  --ckpt "/path/to/selected_checkpoint.ckpt" \
+  --days 2 \
+  --band_region nir \
+  --devices 0
 ```
 
-Use a fresh output directory. Smoke tests check execution; paper reproduction requires full training.
+Replace `--ckpt` with your checkpoint file. Use the configuration, day selection, spectral region, and data split corresponding to its training run.
+Metrics are printed and saved as `test_metrics_<checkpoint_name>.txt` in the evaluation run's log directory.
 
 ## Citation
 
-If this work supports your research, please cite the accepted paper:
-
-> André Oliveira Françani, Liang Zhao, João de Deus Ferreira e Silva, Kaizhou Gao, and Lúcio André de Castro Jorge, “HS-WAE: A Pipeline for Early Insect Damage Detection in Hyperspectral Soybean Data by Enhanced Deep Autoencoder,” IEEE Transactions on Artificial Intelligence, accepted for publication.
+If this work supports your research, please cite the oficial paper:
 
 ```bibtex
 @article{francaniHSWAE,
