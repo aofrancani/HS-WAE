@@ -14,12 +14,11 @@ Official repository of "[HS-WAE: A Pipeline for Early Insect Damage Detection in
 ## Contents
 
 1. [Dataset](#1-dataset)
-2. [Pre-trained models](#2-pre-trained-models)
-3. [Setup](#3-setup)
-4. [Usage](#4-usage)
-5. [Evaluation](#5-evaluation)
-6. [Citation](#citation)
-7. [License](#license)
+2. [Setup](#2-setup)
+3. [Usage](#3-usage)
+4. [Evaluation](#4-evaluation)
+5. [Citation](#citation)
+6. [License](#license)
 
 ## 1. Dataset
 
@@ -36,11 +35,7 @@ data/HS-Class/soybean_HSI.csv
 data/HSI_Blood/HSI_Blood.csv
 ```
 
-## 2. Pre-trained models
-
-Checkpoints are not included. Train a model using the commands below.
-
-## 3. Setup
+## 2. Setup
 
 From the repository root, create and activate the Conda environment (Python 3.10):
 
@@ -71,11 +66,11 @@ python -m pip check
 
 See [environment notes](environment/README.md) for other PyTorch builds.
 
-## 4. Usage
+## 3. Usage
 
 Use Bash (Git Bash on Windows) from the HS-WAE root. Native Python commands are in the [execution guide](RUNNING.md).
 
-### 4.1. Training
+### 3.1. Training
 
 Paper experiments: **25 repetitions, up to 300 epochs each**.
 
@@ -95,7 +90,7 @@ CONFIG=configs/local/dwt_attn.yaml bash scripts/run_soybean.sh hswae --band_regi
 
 Use `--overwrite` to regenerate existing local configs. Ablations, controlled WTAM variants, and baselines are listed in the [execution guide](RUNNING.md#ablations-and-baselines).
 
-### 4.2. Single run and checkpoint evaluation
+### 3.2. Single run and checkpoint evaluation
 
 ```bash
 cd HS-AE
@@ -104,7 +99,7 @@ python -m main --mode test --config configs/dwt_attn.yaml --band_region nir --da
 cd ..
 ```
 
-### 4.3. TensorBoard
+### 3.3. TensorBoard
 
 The standard training scripts log losses, metrics, and confusion matrices. From the HS-WAE root, in a second terminal with `hs-wae` activated:
 
@@ -114,7 +109,7 @@ tensorboard --logdir . --port 6006
 
 Open **[http://localhost:6006](http://localhost:6006)**. Runs are stored under each project's `logs/` or `v0/logs/` directory. Controlled WTAM runs save result files without TensorBoard logging; use the [plotting commands](RUNNING.md#tensorboard-and-saved-plots).
 
-## 5. Evaluation
+## 4. Evaluation
 
 Evaluate a selected checkpoint on the test split. From the repository root, this example uses soybean **Day 2** and the **NIR** spectral region:
 
