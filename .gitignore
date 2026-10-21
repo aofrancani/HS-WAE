@@ -1,0 +1,60 @@
+# Python bytecode, tooling caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Editors and operating-system metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Local environment settings
+.env
+.env.*
+!.env.example
+**/configs/local/
+
+# Datasets stay local; retain download and preparation instructions
+/data/**/*
+!/data/**/
+!/data/**/README.md
+
+# Generated experiment artifacts
+**/logs/
+**/results/
+**/checkpoints/
+**/figures/
+**/figs/
+**/_artifacts/
+**/lightning_logs/
+**/wandb/
+events.out.tfevents.*
+*.ckpt
+*.pt
+*.pth
+*.log
+
+# Archives and temporary output
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.tmp
